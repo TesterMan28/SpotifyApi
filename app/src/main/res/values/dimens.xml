@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="view_padding">10dp</dimen>
+    <dimen name="song_title_size">20sp</dimen>
+    <dimen name="song_description_size">16sp</dimen>
+    <dimen name="logo_width">50dp</dimen>
+    <dimen name="logo_height">50dp</dimen>
+</resources>

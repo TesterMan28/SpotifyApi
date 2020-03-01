@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateSong() {
         if (recentlyPlayedTracks.size() > 0) {
-            songView.setText(recentlyPlayedTracks.get(0).getName());
+            //songView.setText(recentlyPlayedTracks.get(0).getName());
             song = recentlyPlayedTracks.get(0);
         }
     }

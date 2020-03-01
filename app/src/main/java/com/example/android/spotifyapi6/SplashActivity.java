@@ -96,7 +96,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void startMainActivity() {
         //Intent newintent = new Intent(SplashActivity.this, MainActivity.class);
-        Intent newintent = new Intent(SplashActivity.this, ResultsActivity.class);
+        Intent newintent = new Intent(SplashActivity.this, SongsActivity.class);
         startActivity(newintent);
     }
 }

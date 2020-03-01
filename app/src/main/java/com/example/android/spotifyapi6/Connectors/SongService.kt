@@ -11,7 +11,6 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.android.spotifyapi6.Models.Artist
 import com.example.android.spotifyapi6.Models.Song
 import com.example.android.spotifyapi6.Models.Track
 import com.example.android.spotifyapi6.VolleyCallBack
@@ -19,7 +18,6 @@ import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.Exception
 
 class SongService(context: Context) {
 
@@ -120,6 +118,8 @@ class SongService(context: Context) {
 
     // Custom function. Get the search results from an artists name
     fun getSearchResults(callback: VolleyCallBack): ArrayList<Track> {
+    //fun getSearchResults(): ArrayList<Track> {
+        var returnData = mutableListOf<Any>()
         //val endpoint = "https://api.spotify.com/v1/search?q=$query&type=artist"
         Log.d("ENDPOINT VALUE", search_endpoint)
         val jsonObjectRequest: JsonObjectRequest = object: JsonObjectRequest(
@@ -130,29 +130,45 @@ class SongService(context: Context) {
                 var jsonObject = response!!.optJSONObject("tracks")
                 var jsonArray = jsonObject.optJSONArray("items")
 
+
                 var artistJSONArray: JSONArray
                 var artistJSONObject: JSONObject
+
+                var imageJSONArray: JSONArray
+                var imageJSONObject: JSONObject
                 for (n in 0 until jsonArray.length()) {
                     try {
                         jsonObject = jsonArray.get(n) as JSONObject
                         val track = gson.fromJson<Track>(jsonObject.toString(), Track::class.java)
+                        //imageJSONObject = jsonArray.optJSONObject(0)
+                        //imageJSONObject = imageJSONObject.optJSONObject("album")
 
-                        // Deserialize the artists JSON data
-                        //artistJSONArray = jsonObject.optJSONArray("artists")
-                        //Log.d("ARTIST ARRAY", artistJSONArray.toString())
+                        //imageJSONArray = imageJSONObject.optJSONArray("images")
 
-
-                        val trackArtist = track.getArtists()
-                        for (i in trackArtist) {
-                            Log.d("TRACK ARTIST ID", i.getId())
-                            Log.d("TRACK ARTIST NAME", i.getName())
+                        // List of all track images
+                        val trackImages = track.getAlbum().getImages()
+                        for (k in trackImages) {
+                            //Log.d("IMAGE HEIGHT", k.getHeight().toString())
+                            //Log.d("IMAGE WIDTH", k.getWidth().toString())
                         }
 
 
-                        Log.d("ALBUM NAME", jsonObject.getString("name"))
-                        println("JSON: ${jsonObject.toString()}")
-                        Log.d("TRACK VALUE", track.getName())
-                        Log.d("ARTIST JSON", artistJSONArray.toString())
+
+                        // List of all track artists
+                        val trackArtist = track.getArtists()
+                        for (i in trackArtist) {
+                            //Log.d("TRACK ARTIST ID", i.getId())
+                            //Log.d("TRACK ARTIST NAME", i.getName())
+                        }
+
+
+
+
+                        //Log.d("IMAGE URL", track.getImages().get(n).getURL()) // Testing
+                        //Log.d("ALBUM NAME", jsonObject.getString("name"))
+                        //println("JSON: ${jsonObject.toString()}")
+                        //Log.d("TRACK VALUE", track.getName())
+                        // Log.d("ARTIST JSON", artistJSONArray.toString())
                         tracks.add(track)
                     } catch (e: JSONException) {
                         e.printStackTrace()
@@ -186,8 +202,14 @@ class SongService(context: Context) {
 
     // Custom function. Add parameters to search url
     fun createSearchUrl(query: String) {
+        // Check if query contains spaces
+        // If it does, remove leading, trailing and any whitespace > 2
+        var after = query.trim().replace(" +", " ")
+        after = after.replace(" ", "%20")
+        Log.d("AFTER", after)
+
         search_endpoint = "https://api.spotify.com/v1/search?"        // Temp reset of the base url
-        search_endpoint += "q=$query&type=track"
+        search_endpoint += "q=$after&type=track"
     }
 
 }
